@@ -29,7 +29,7 @@ public class PaymentArrangementPage {
     private final By termField = By.xpath("//input[@name='term']");
     private final By repaymentAmountField = By.xpath("//input[@name='amountPerFrequency']");
     private final By startDateField = By.xpath("//input[@name='startDate']");
-    private final By submitButton = By.xpath("//button[@title='Primary action']");
+    private final By submitButton = By.xpath("//button[@title='Primary action' and text()='Submit']");
     private final By cancelButton = By.xpath("//button[@id='Cancel']");
     private final By createPaymentArrangementDropdown = By.xpath("//lightning-primitive-icon[@variant='bare']");
     private final By createPaymentArrangementOption = By.xpath("//span[normalize-space()='Create Payment Arrangement']");
@@ -72,15 +72,12 @@ public class PaymentArrangementPage {
         int terms;
 
         if (delinquentAmount <= 500) {
-            // For smaller delinquent amounts, prefer weekly payments with more terms
             frequency = "Weekly";
             terms = faker.number().numberBetween(2, 5); // Randomly choose between 2 and 5 terms
         } else if (delinquentAmount <= 1000) {
-            // For medium delinquent amounts, prefer fortnightly or monthly payments
             frequency = faker.options().option("Fortnightly", "Monthly");
             terms = faker.number().numberBetween(2, 6); // Randomly choose between 2 and 6 terms
         } else {
-            // For larger delinquent amounts, prefer monthly payments with fewer terms
             frequency = "Monthly";
             terms = faker.number().numberBetween(3, 12); // Randomly choose between 3 and 12 terms
         }
@@ -91,32 +88,47 @@ public class PaymentArrangementPage {
         utility.enterText(termField, String.valueOf(terms));
         utility.enterText(repaymentAmountField, String.format("%.2f", repaymentAmount));
 
-        // Set Start Date -> Tomorrow's date
+        // Calculate Total Amount (repayment amount * terms)
+        double totalAmount = repaymentAmount * terms;
+        utility.enterText(By.xpath("//input[@name='totalAmount']"), String.format("%.2f", totalAmount)); // Update Total Amount field if editable
+
+        // Set Start Date -> Tomorrow's Date
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         String startDate = String.format("%02d/%02d/%d", tomorrow.getDayOfMonth(), tomorrow.getMonthValue(), tomorrow.getYear());
         utility.enterText(startDateField, startDate);
 
-        // Log the details
+        // Log the generated data
         System.out.println("Generated Data for Payment Arrangement:");
         System.out.println("Delinquent Amount: " + delinquentAmount);
         System.out.println("Type: " + type);
         System.out.println("Frequency: " + frequency);
         System.out.println("Terms: " + terms);
         System.out.println("Repayment Amount: " + repaymentAmount);
+        System.out.println("Total Amount: " + totalAmount);
         System.out.println("Start Date: " + startDate);
     }
 
 
 
 
+
     public void clickSubmitButton() {
         try {
-            wait.until(ExpectedConditions.elementToBeClickable(submitButton)).click();
-            System.out.println("Submit button clicked successfully.");
+            // Wait for the Submit button to be clickable
+            WebElement submitButtonElement = wait.until(ExpectedConditions.elementToBeClickable(submitButton));
+
+            // Check if the button is enabled
+            if (submitButtonElement.isEnabled()) {
+                submitButtonElement.click(); // Click the Submit button
+                System.out.println("Submit button clicked successfully.");
+            } else {
+                System.err.println("Submit button is disabled. Please check the form for errors.");
+            }
         } catch (Exception e) {
             System.err.println("Failed to click Submit button: " + e.getMessage());
         }
     }
+
 
     public void clickCancelButton() {
         wait.until(ExpectedConditions.elementToBeClickable(cancelButton));

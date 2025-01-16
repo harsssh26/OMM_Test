@@ -25,6 +25,16 @@ public class DashboardPage {
     }
 
     public void navigateToContracts() throws InterruptedException {
+        //Navigating to OMM Collection Dashboard
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='slds-icon-waffle']")));
+        utility.jsClick(By.xpath("//div[@class='slds-icon-waffle']"));
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@placeholder='Search apps and items...']")));
+        utility.enterText(By.xpath("//input[@placeholder='Search apps and items...']"), "Collection Dashboard");
+
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span//p//b[text()='Collection Dashboard']")));
+        utility.jsClick(By.xpath("//span//p//b[text()='Collection Dashboard']"));
+
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@title='Show Navigation Menu']//lightning-primitive-icon[@variant='bare']")));
         utility.jsClick(By.xpath("//button[@title='Show Navigation Menu']//lightning-primitive-icon[@variant='bare']"));
         // clicking on the dropdown button on dashboard page
@@ -33,8 +43,8 @@ public class DashboardPage {
         utility.jsClick(By.xpath("//span[@class='menuLabel slds-listbox__option-text slds-listbox__option-text_entity'][normalize-space()='Contracts']"));
         //clicking on the contratcs from the dropdown menu
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='LAI-00102207']")));
-        utility.jsClick(By.xpath("//a[@title='LAI-00102207']"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='LAI-00102204']")));
+        utility.jsClick(By.xpath("//a[@title='LAI-00102204']"));
         //clicking on the specific contract[hardcoded]
 
     }
