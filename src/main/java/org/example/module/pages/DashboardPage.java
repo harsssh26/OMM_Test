@@ -43,8 +43,8 @@ public class DashboardPage {
         utility.jsClick(By.xpath("//span[@class='menuLabel slds-listbox__option-text slds-listbox__option-text_entity'][normalize-space()='Contracts']"));
         //clicking on the contratcs from the dropdown menu
 
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='LAI-00102204']")));
-        utility.jsClick(By.xpath("//a[@title='LAI-00102204']"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='LAI-00101361']")));
+        utility.jsClick(By.xpath("//a[@title='LAI-00101361']"));
         //clicking on the specific contract[hardcoded]
 
     }

@@ -33,4 +33,20 @@ public class TestSteps {
        paymentArrangementPage.clickSubmitButton();
 
     }
+
+    @When("user tries to create payment collection for contract which already has a payment collection")
+    public void paymentArrangemenRecreation() throws InterruptedException
+    {
+        paymentArrangementPage.createNewPaymentArrangement();
+
+    }
+
+    @Then("user encounters an error")
+    public void userEncountersAnError() throws InterruptedException {
+        Thread.sleep(2000);
+        // Verify the error message
+        boolean isErrorDisplayed = paymentArrangementPage.isExistingArrangementErrorDisplayed();
+        assertTrue("Expected error message is not displayed.", isErrorDisplayed);
+
+    }
 }

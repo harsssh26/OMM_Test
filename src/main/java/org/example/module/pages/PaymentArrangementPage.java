@@ -35,6 +35,7 @@ public class PaymentArrangementPage {
     private final By createPaymentArrangementOption = By.xpath("//span[normalize-space()='Create Payment Arrangement']");
     private final By successToastMessage = By.xpath("//div[@class='toast-message' and contains(text(), 'Payment Arrangement created successfully')]");
     private final By delinquentAmountField = By.xpath("//label[contains(text(), 'Delinquent Amount')]/following-sibling::div//span");
+    private final By existingArrangementError = By.xpath("//*[contains(text(), 'This contract already have a payment arrangement')]");
 
     // Actions
 
@@ -149,4 +150,11 @@ public class PaymentArrangementPage {
         System.out.println("Repayment Amount: " + utility.getText(repaymentAmountField));
         System.out.println("Start Date: " + utility.getText(startDateField));
     }
+
+    // error checking
+    public boolean isExistingArrangementErrorDisplayed() {
+        return utility.verifyElementPresence(existingArrangementError);
+    }
+
+
 }
