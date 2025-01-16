@@ -24,7 +24,7 @@ public class PaymentArrangementPage {
     }
 
     // Locators
-    private final By typeDropdown = By.xpath("//select[@name='type']");
+    private final By typeDropdown = By.xpath("//div[@class='payment-arrangement-details']//div[1]//div[1]//select[1]");
     private final By frequencyDropdown = By.xpath("//select[@name='frequency']");
     private final By termField = By.xpath("//input[@name='term']");
     private final By repaymentAmountField = By.xpath("//input[@name='amountPerFrequency']");
@@ -54,42 +54,59 @@ public class PaymentArrangementPage {
             System.err.println("InterruptedException occurred: " + e.getMessage());
         }
     }
-
-    /**
-     * Fetch the Delinquent Amount dynamically.
-     */
     private double getDelinquentAmount() {
         String delinquentAmountText = utility.getText(delinquentAmountField).replace("$", "").replace(",", "").trim();
         return Double.parseDouble(delinquentAmountText);
     }
 
-    /**
-     * Fill in the Payment Arrangement Details.
-     */
     public void fillPaymentArrangementDetails() {
         double delinquentAmount = getDelinquentAmount(); // Fetch the delinquent amount dynamically
 
-        // Select Type -> Inbound PTP
-        utility.selectByVisibleText(typeDropdown, "Inbound PTP");
+        // Select Type -> Randomly choose between "Inbound PTP" and "Outbound PTP"
+        String[] types = {"Inbound PTP", "Outbound PTP"};
+        String type = types[faker.number().numberBetween(0, types.length)];
+        utility.selectByVisibleText(typeDropdown, type);
 
-        // Select Frequency -> Weekly
-        utility.selectByVisibleText(frequencyDropdown, "Weekly");
+        // Determine Frequency and Terms Based on Delinquent Amount
+        String frequency;
+        int terms;
 
-        // Set Term
-        int terms = 3; // Adjust this dynamically or based on test case
-        utility.enterText(termField, String.valueOf(terms));
+        if (delinquentAmount <= 500) {
+            // For smaller delinquent amounts, prefer weekly payments with more terms
+            frequency = "Weekly";
+            terms = faker.number().numberBetween(2, 5); // Randomly choose between 2 and 5 terms
+        } else if (delinquentAmount <= 1000) {
+            // For medium delinquent amounts, prefer fortnightly or monthly payments
+            frequency = faker.options().option("Fortnightly", "Monthly");
+            terms = faker.number().numberBetween(2, 6); // Randomly choose between 2 and 6 terms
+        } else {
+            // For larger delinquent amounts, prefer monthly payments with fewer terms
+            frequency = "Monthly";
+            terms = faker.number().numberBetween(3, 12); // Randomly choose between 3 and 12 terms
+        }
+        utility.selectByVisibleText(frequencyDropdown, frequency);
 
         // Calculate Repayment Amount
         double repaymentAmount = delinquentAmount / terms;
+        utility.enterText(termField, String.valueOf(terms));
         utility.enterText(repaymentAmountField, String.format("%.2f", repaymentAmount));
 
-        // Set Start Date
-        String startDate = "17/01/" + LocalDate.now().getYear();
+        // Set Start Date -> Tomorrow's date
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        String startDate = String.format("%02d/%02d/%d", tomorrow.getDayOfMonth(), tomorrow.getMonthValue(), tomorrow.getYear());
         utility.enterText(startDateField, startDate);
 
-        System.out.println("Details entered: Delinquent Amount=" + delinquentAmount + ", Terms=" + terms +
-                ", Repayment Amount=" + repaymentAmount + ", Start Date=" + startDate);
+        // Log the details
+        System.out.println("Generated Data for Payment Arrangement:");
+        System.out.println("Delinquent Amount: " + delinquentAmount);
+        System.out.println("Type: " + type);
+        System.out.println("Frequency: " + frequency);
+        System.out.println("Terms: " + terms);
+        System.out.println("Repayment Amount: " + repaymentAmount);
+        System.out.println("Start Date: " + startDate);
     }
+
+
 
 
     public void clickSubmitButton() {

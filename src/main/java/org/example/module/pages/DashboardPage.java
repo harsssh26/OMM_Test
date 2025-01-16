@@ -28,15 +28,15 @@ public class DashboardPage {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//button[@title='Show Navigation Menu']//lightning-primitive-icon[@variant='bare']")));
         utility.jsClick(By.xpath("//button[@title='Show Navigation Menu']//lightning-primitive-icon[@variant='bare']"));
         // clicking on the dropdown button on dashboard page
-        Thread.sleep(2000);
+
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[@class='menuLabel slds-listbox__option-text slds-listbox__option-text_entity'][normalize-space()='Contracts']")));
         utility.jsClick(By.xpath("//span[@class='menuLabel slds-listbox__option-text slds-listbox__option-text_entity'][normalize-space()='Contracts']"));
         //clicking on the contratcs from the dropdown menu
-        Thread.sleep(2000);
+
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@title='LAI-00102207']")));
         utility.jsClick(By.xpath("//a[@title='LAI-00102207']"));
         //clicking on the specific contract[hardcoded]
-        Thread.sleep(2000);
+
     }
 
 

@@ -31,6 +31,7 @@ public class TestSteps {
        paymentArrangementPage.createNewPaymentArrangement();
        paymentArrangementPage.fillPaymentArrangementDetails();
        paymentArrangementPage.clickSubmitButton();
+       paymentArrangementPage.printGeneratedData();
 
     }
 }
