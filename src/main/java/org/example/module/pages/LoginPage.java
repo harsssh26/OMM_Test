@@ -44,7 +44,7 @@ public class LoginPage {
             System.out.println("Clicking Login Button");
             wait.until(ExpectedConditions.elementToBeClickable(loginButton)).click();
 
-            utility.waitForPageToLoad(); // Wait for the page to load
+//            utility.waitForPageToLoad(); // Wait for the page to load
            // utility.switchToLightningExperience(); // Switch to Lightning Experience if in Classic
         } catch (TimeoutException e) {
             System.err.println("Timeout during login: " + e.getMessage());
